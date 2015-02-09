@@ -8,9 +8,12 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 // app.use('/assets', express.static(__dirname + '/bower_components'));
 
-app.get('/', function(req, res){
-  res.render('index', {title: 'Home App'});
-});
+var bodyParser = require('body-parser')
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
 
 var hbs = require('express4-handlebars');
 var views = path.join(__dirname, 'app', 'views')
@@ -22,6 +25,9 @@ hbs.set('partials_dir', path.join(views, 'partials'));
 hbs.set('useLayout', false);
 
 config(app);
+
+var router = path.join(__dirname, 'app', 'routers');
+require(router)(app);
 
 var server = http.createServer(app);
 

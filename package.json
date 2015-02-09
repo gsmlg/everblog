@@ -4,8 +4,11 @@
   "description": "Home App",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.11.0",
     "express": "^4.11.2",
-    "gulp": "^3.8.10"
+    "gulp": "^3.8.10",
+    "nedb": "^1.1.1",
+    "rsvp": "^3.0.16"
   },
   "devDependencies": {
     "broccoli": "^0.13.3",

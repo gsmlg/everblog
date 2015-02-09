@@ -21,9 +21,9 @@ var Nav = React.createClass({
 
 var Navs = React.createClass({
   render: function(){
-    var navs = this.props.navs.map(function(nav){
+    var navs = this.props.navs.map(function(nav, index){
       return (
-        <Nav nav={nav} />
+        <Nav key={index} nav={nav} />
         );
     });
     return (
