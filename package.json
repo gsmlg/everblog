@@ -1,0 +1,39 @@
+{
+  "name": "Home",
+  "version": "1.0.0",
+  "description": "Home App",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.11.2",
+    "gulp": "^3.8.10"
+  },
+  "devDependencies": {
+    "broccoli": "^0.13.3",
+    "broccoli-bower": "^0.2.1",
+    "broccoli-env": "0.0.1",
+    "broccoli-es6-concatenator": "^0.1.11",
+    "broccoli-less-single": "^0.1.5",
+    "broccoli-merge-trees": "^0.2.1",
+    "broccoli-static-compiler": "^0.2.1",
+    "less": "^2.3.1",
+    "tiny-lr": "^0.1.5"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "karma test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gsmlg/home.git"
+  },
+  "keywords": [
+    "home",
+    "js"
+  ],
+  "author": "gsmlg",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/gsmlg/home/issues"
+  },
+  "homepage": "https://github.com/gsmlg/home"
+}
