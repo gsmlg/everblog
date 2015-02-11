@@ -48,7 +48,7 @@ var appJs = compileES6(appAndDependencies, {
     'jquery.js',
     'underscore.js',
     'backbone.js',
-    'react.js'
+    'react-with-addons.js'
   ],
   wrapInEval: false,
   outputFile: '/assets/app.js'
@@ -67,3 +67,4 @@ var publicFiles = 'public'
 
 // merge js, css and public file trees, and export them
 module.exports = mergeTrees([appJs, appCss, publicFiles])
+

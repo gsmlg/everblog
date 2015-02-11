@@ -2,7 +2,7 @@
   "name": "Home",
   "version": "1.0.0",
   "description": "Home App",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "body-parser": "^1.11.0",
     "express": "^4.11.2",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "karma test"
+    "test": "karma run"
   },
   "repository": {
     "type": "git",

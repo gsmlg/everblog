@@ -8,6 +8,11 @@ var TopNavs = Navs.extend({
 
 var topNavs = new TopNavs();
 
-export default TopNavs;
+var Books = Backbone.Collection.extend({
+  idAttribute: '_id',
+  url: '/books'
+});
 
-export {topNavs};
+var books = new Books();
+
+export {topNavs, books};

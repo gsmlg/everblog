@@ -1,26 +1,19 @@
-import {topNavs} from './store';
-
+import {topNavs, books} from './store';
+import Home from './application';
+import Books from './books';
+window.Books = Books;
 export default Backbone.Router.extend({
   routes: {
     '/': 'index',
-    'alpha': 'alpha',
-    'beta': 'beta',
-    'omega': 'omega',
-    'nabla': 'nabla'
+    'books': 'books'
   },
   index: function(){
     topNavs.add({name: 'alpha', link: '#alpha'});
   },
-  alpha: function(){
-    topNavs.add({name: 'beta', link: '#beta'});
-  },
-  beta: function(){
-    topNavs.add({name: 'omega', link: '#omega'});
-  },
-  omega: function(){
-    topNavs.add({name: 'nabla', link: '#nabla'});
-  },
-  nabla: function(){
-    topNavs.each(function(m){ topNavs.remove(m); });
+  books: function(){
+    Books.setProps({books: books});
+    Home.setProps({
+      main: Books
+    });
   }
 });

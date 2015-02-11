@@ -24,10 +24,10 @@ hbs.set('layout_dir', path.join(views, 'layout'));
 hbs.set('partials_dir', path.join(views, 'partials'));
 hbs.set('useLayout', false);
 
-config(app);
-
 var router = path.join(__dirname, 'app', 'routers');
 require(router)(app);
+
+config(app);
 
 var server = http.createServer(app);
 

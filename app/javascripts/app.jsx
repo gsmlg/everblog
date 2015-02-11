@@ -18,11 +18,4 @@ App.router.navigate('/', {trigger: true});
 
 topNavs.add({name: 'books', link: '#books'});
 
-App.View = React.render(
-  <Home
-    topNavs={topNavs}
-    />,
-  document.body
-);
-
 export default App;
