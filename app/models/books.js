@@ -1,5 +1,6 @@
 var path = require('path');
 var Datastore = require('nedb');
+var _ = require('underscore');
 var Promise = require('rsvp').Promise;
 var store = new Datastore({
   filename: path.join(__dirname, 'books.db'),
@@ -27,6 +28,34 @@ var Books = {
           reject(err);
         } else {
           resolve(newData);
+        }
+      });
+    });
+  },
+  update: function(id, data) {
+    return new Promise(function(resolve, reject){
+      store.update({_id: id}, data, {}, function(err){
+        if (err) {
+          reject(err);
+        } else {
+          store.findOne({_id: id}, function(err, newData) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(newData);
+            }
+          });
+        }
+      });
+    });
+  },
+  remove: function(id) {
+    return new Promise(function(resolve, reject){
+      store.remove({_id: id}, data, {}, function(err, numRemoved){
+        if (err) {
+          reject(err);
+        } else {
+          resolve(numRemoved);
         }
       });
     });

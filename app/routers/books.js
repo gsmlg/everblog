@@ -22,9 +22,22 @@ router.route('/').get(function(req, res){
 });
 
 router.route('/:id').put(function(req, res){
-
+  var book = req.body.book ? req.body.book : req.body;
+  Books.update(req.params.id, book).then(function(book){
+    res.json(book);
+  }, function(error){
+    res.status(400).send(error);
+  });
 }).delete(function(req, res){
-
+  var id = req.params.id;
+  Books.remove(id).then(function(num){
+    if (num > 0)
+      res.status(204).send(null);
+    else
+      res.status(404).send(null);
+  }, function(error){
+    res.status(400).send(error);
+  });
 });
 
 module.exports = router;
