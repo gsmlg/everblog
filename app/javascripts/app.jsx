@@ -46,91 +46,7 @@ var Header = React.createClass({
     }
 });
 
-var BookForm = React.createClass({
-    componentDidMount: function() {
-        if (this.props.book) {
-            this.setState(this.props.book.toJSON());
-        }
-    },
-    onSubmit: function(e) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        var title = this.refs.title.getDOMNode().value.trim();
-        var author = this.refs.author.getDOMNode().value.trim();
-        if (!title || !author) {
-            return void(0);
-        } else {
-            this.props.handleSubmit({title: title, author: author}, this.props.book);
-        }
-    },
-    render: function() {
-        var book = {}
-        if (this.props.book) {
-            book = this.props.book.toJSON();
-        }
 
-        var submit = (this.props.book && !this.props.book.isNew()) ? 'Update' : 'Create';
-        return (
-            <form onSubmit={this.onSubmit} className="form-horizontal">
-            <div className="form-group">
-            <label htmlFor="inputBookTitle" className="col-sm-2 control-label">Title :</label>
-            <div className="col-sm-10">
-            <input ref='title' defaultValue={book.title} type="text" className="form-control" id="inputBookTitle" placeholder="Book Title ..." />
-            </div>
-            </div>
-            <div className="form-group">
-            <label htmlFor="inputAuthor" className="col-sm-2 control-label">Author :</label>
-            <div className="col-sm-10">
-            <input ref='author' defaultValue={book.author} type="text" className="form-control" id="inputAuthor" placeholder="Book Author ..." />
-            </div>
-            </div>
-            <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10">
-            <button type="submit" className="btn btn-default">{submit}</button>
-            </div>
-            </div>
-            </form>
-        );
-    }
-});
-
-var BookItem = React.createClass({
-    componentDidMount: function() {
-        this.props.book.on('change', function(book){
-            this.forceUpdate();
-        }, this);
-    },
-    componentWillUnmount: function() {
-        this.props.book.off(null, null, this);
-    },
-    getInitialState: function() {
-        return {};
-        // return this.props.book.toJSON();
-    },
-    handleSelect: function(e) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        this.props.book.toggleSelect();
-    },
-    render: function() {
-        var book = this.props.book;
-        return (
-            <div className="col-md-3">
-            <section className={"book-item" + (book.get('selected') ? ' selected' : '')}>
-            <header>
-            <h3>{book.get('title')}</h3>
-            <span>{book.get('author')}</span>
-            </header>
-            <button onClick={this.handleSelect}>Select</button>
-            </section>
-            </div>
-        );
-    }
-});
 
 var BookList = React.createClass({
     render: function() {
@@ -145,6 +61,85 @@ var BookList = React.createClass({
     }
 });
 
+var SearchForm = React.createClass({
+    handleSearch: function(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        var search = this.refs.search.getDOMNode().value.trim();
+        if (!search) return null;
+        this.props.searchHandler(search);
+    },
+    render: function() {
+        return (
+            <div className="SearchForm">
+                <form onSubmit={this.handleSearch} className="form-inline" >
+                    <div className="form-group">
+                        <input ref="search" className="form-control" type="earch" placeholder="Search Books ... " />
+                        <input className="btn btn-primary" type="submit" value="Search" />
+                    </div>
+                </form>
+            </div>
+        )
+    }
+});
+
+var Book = React.createClass({
+    render: function() {
+        var book = this.props.book;
+        return (
+            <section>
+                <header>
+                <h3><a href={book.alt} title={book.alt_title}>{book.title}</a></h3>
+                <h3><small title={book.author_intro}>Author: {book.author.join('; ')}</small></h3>
+                <div>Rating: {book.rating.average}, mumRaters: {book.rating.numRaters}</div>
+                </header>
+                <div>
+                    <img className="img-rounded" src={book.image} />
+                </div>
+            </section>
+        );
+    }
+});
+
+var ShowBooks = React.createClass({
+    render: function() {
+        var content = null, i, j, list, newList, data, itemPerRow, row;
+        if (this.props.data && this.props.data.books) {
+            data = this.props.data, books = data.books;
+            list = books.map(function(book) {
+                return (
+                    <div key={book.id} className="col-md-3">
+                        <Book book={book} />
+                    </div>
+                );
+            }); 
+            newList = [], itemPerRow = 4;
+            for (i = 0, j = list.length; i < j; i += itemPerRow) {
+                row = list.slice(i, i + itemPerRow);
+                newList.push(
+                    <div key={'row-'+(i/itemPerRow+1)} className="row">
+                        {row}
+                    </div>
+                );
+            }
+            content = (
+                <section >
+                    <div>Total: {data.total}</div>
+                    <div className="container-fluid">
+                        {newList}
+                    </div>
+                </section>
+            );
+        }
+        return (
+            <section className="books">
+                {content}
+            </section>
+        );
+    }
+});
 
 var Home = React.createClass({
     componenetDidMount: function() {
@@ -154,70 +149,28 @@ var Home = React.createClass({
         this.props.books.off(null, null , this);
     },
     getInitialState: function() {
-        return {showing: 'list'};
+        return {showing: 'list', query_books: []};
     },
-    handleShowing: function(state) {
-        this.setState({showing: state});
-    },
-    handleCreate: function(formData, model) {
-        this.props.books.create(formData, {wait: true});
-    },
-    handleEdit: function(formDate, model) {
-        model.save(formDate, {wait: true});
-    },
-    handleRemove: function(formDate, model) {
-        model.destroy({wait: true});
-    },
-    getShowing: function() {
-        switch (this.state.showing) {
-        case 'loading':
-            return (<div className='contaner'><h2>Loading ... </h2></div>);
-            break;
-        case 'add':
-            return (<BookForm handleSubmit={this.handleCreate} />);
-            break;
-        case 'edit':
-            var book = this.props.books.getSelected();
-            if (book)
-                return (<BookForm book={book} handleSubmit={this.handleEdit} />);
-            else
-                return (<BookList books={this.props.books} />);
-            break;
-        case 'delete':
-            var book = this.props.books.getSelected();
-            if (book)
-                return (<BookForm book={book} handleSubmit={this.handleRemove} />);
-            else
-                return (<BookList books={this.props.books} />);
-            break;
-        case 'list':
-            return (<BookList books={this.props.books} />);
-            break;
-        }
+    searchHandler: function(search) {
+        var params = {
+            q: search
+        };
+        $.ajax({
+            dataType: 'jsonp',
+            url: 'https://api.douban.com/v2/book/search',
+            data: params
+        }).then(function(data){
+            this.setState({query_books: data});
+        }.bind(this));
     },
     render: function() {
-        var navs = ['list', 'add', 'edit', 'delete'].map(function(nav){
-            return (
-                <li key={nav} className={this.state.showing == nav ? 'active' : ''}>
-                <a href={'#'+nav} onClick={this.handleShowing.bind(this, nav)}>{nav.toUpperCase()}</a>
-                </li>
-            );
-        }.bind(this));
         return (
             <div className="Application">
             <Header />
             <div className="container">
             <div className="row">
-            <div className="col-md-3">
-            <nav>
-            <ul className="nav nav-pills nav-stacked">
-            {navs}
-            </ul>
-            </nav>
-            </div>
-            <div className="col-md-9">
-            {this.getShowing()}
-            </div>
+                <SearchForm searchHandler={this.searchHandler} />
+                <ShowBooks data={this.state.query_books} />
             </div>
             </div>
             </div>
