@@ -1,3 +1,17 @@
+import dom from 'domReady';
+
+import Backbone from 'backbone';
+import React from 'react-with-addons';
+
+var Notebook = Backbone.Model.extend({
+    idAttribute: 'guid'
+});
+
+var Notebooks = Backbone.Collection.extend({
+    model: Notebook,
+    url: '/notebooks'
+});
+
 var Book = Backbone.Model.extend({
     idAttribute: '_id',
     toggleSelect: function() {
@@ -24,7 +38,23 @@ var Books = Backbone.Collection.extend({
 
 
 var Header = React.createClass({
+    componenetDidMount: function() {
+        // this.props.notebooks.on('add remove reset', this.forceUpdate, this);
+    },
+    componenentWillUnmount: function() {
+        // this.props.notebooks.off(null, null , this);
+    },
+    getInitialState: function(){
+        return {};
+    },
     render: function() {
+        var menus = this.props.notebooks.map(function(notebook){
+            notebook = notebook.toJSON();
+            return (
+                <li key={notebook.guid}>
+                <a href={'#/notebooks/'+notebook.guid}>{notebook.name}<span className="sr-only">(current)</span></a>
+                </li>)
+        });
         return (
             <div className="navbar navbar-inverse">
             <div className="navbar-header">
@@ -39,6 +69,7 @@ var Header = React.createClass({
             <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
             <li className="active"><a href="#">Books<span className="sr-only">(current)</span></a></li>
+            {menus}
             </ul>
             </div>
             </div>
@@ -144,12 +175,14 @@ var ShowBooks = React.createClass({
 var Home = React.createClass({
     componenetDidMount: function() {
         this.props.books.on('add remove reset', this.forceUpdate.bind(this), this);
+        this.props.notebooks.on('add remove reset', this.forceUpdate, this);
     },
     componenentWillUnmount: function() {
         this.props.books.off(null, null , this);
+        this.props.notebooks.off(null, null , this);
     },
     getInitialState: function() {
-        return {showing: 'list', query_books: []};
+        return {showing: 'list', query_books: [], menus: []};
     },
     searchHandler: function(search) {
         var params = {
@@ -166,7 +199,7 @@ var Home = React.createClass({
     render: function() {
         return (
             <div className="Application">
-            <Header />
+            <Header notebooks={this.props.notebooks} />
             <div className="container">
             <div className="row">
                 <SearchForm searchHandler={this.searchHandler} />
@@ -179,19 +212,16 @@ var Home = React.createClass({
 });
 
 var books = new Books();
+var notebooks = new Notebooks();
 
 window.books = books;
+window.notebooks = notebooks;
 
-var App = React.render(<Home books={books} />, document.body);
+var App = React.render(<Home books={books} notebooks={notebooks} />, document.body);
 
 export default App;
 
-books.on('request', function(){
-    App.setState({showing: 'loading'});
-});
-
-books.on('sync error', function(){
-    App.setState({showing: 'list'});
-});
-
 books.fetch();
+notebooks.fetch().then(function(){
+    App = React.render(<Home books={books} notebooks={notebooks} />, document.body);
+});

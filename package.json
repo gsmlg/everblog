@@ -5,13 +5,18 @@
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.11.0",
+    "evernote": "^1.25.4",
     "express": "^4.11.2",
+    "express4-handlebars": "^0.2.0",
     "gulp": "^3.8.10",
     "nedb": "^1.1.1",
-    "rsvp": "^3.0.16"
+    "requirejs": "^2.1.16",
+    "rsvp": "^3.0.16",
+    "underscore": "^1.8.2"
   },
   "devDependencies": {
     "broccoli": "^0.13.3",
+    "broccoli-babel-transpiler": "^4.0.1",
     "broccoli-bower": "^0.2.1",
     "broccoli-env": "0.0.1",
     "broccoli-es6-concatenator": "^0.1.11",
