@@ -32,7 +32,8 @@ config(app);
 var server = http.createServer(app);
 
 var port = config.PORT;
+var host = config.HOST || '0.0.0.0';
 
-server.listen(port, function(){
-  console.log('Server start at %s', port);
+server.listen(port, host, function(){
+  console.log('Server start at %s:%s', host, port);
 });

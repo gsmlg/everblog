@@ -44,7 +44,7 @@ var appAndDependencies = mergeTrees(sourceTrees, { overwrite: true });
 
 
 var appJs = appAndDependencies; 
-console.log(require('util').inspect(appJs, {depth: null, colors: true}));
+// console.log(require('util').inspect(appJs, {depth: null, colors: true}));
 
 // compile less
 var appCss = compileLess(

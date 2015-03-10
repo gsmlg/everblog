@@ -12,31 +12,6 @@ var Notebooks = Backbone.Collection.extend({
     url: '/notebooks'
 });
 
-var Book = Backbone.Model.extend({
-    idAttribute: '_id',
-    toggleSelect: function() {
-        this.set('selected', !this.get('selected'));
-    }
-});
-
-var Books = Backbone.Collection.extend({
-    model: Book,
-    url: '/books',
-    initialize: function() {
-        this.on('change:selected', this.selectedChange, this);
-    },
-    selectedChange: function(model) {
-        if (model.get('selected')) {
-            this.chain().without(model).invoke('set', {selected: false});
-        }
-    },
-    getSelected: function() {
-        return this.findWhere({selected: true});
-    }
-});
-
-
-
 var Header = React.createClass({
     componenetDidMount: function() {
         // this.props.notebooks.on('add remove reset', this.forceUpdate, this);
@@ -64,11 +39,10 @@ var Header = React.createClass({
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand">Home</a>
+            <a className="navbar-brand" href="/#">Home</a>
             </div>
             <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
-            <li className="active"><a href="#">Books<span className="sr-only">(current)</span></a></li>
             {menus}
             </ul>
             </div>
@@ -173,28 +147,14 @@ var ShowBooks = React.createClass({
 });
 
 var Home = React.createClass({
-    componenetDidMount: function() {
-        this.props.books.on('add remove reset', this.forceUpdate.bind(this), this);
-        this.props.notebooks.on('add remove reset', this.forceUpdate, this);
+    componentDidMount: function() {
+        this.props.notebooks.on('add remove reset', this.forceUpdate.bind(this, null));
     },
-    componenentWillUnmount: function() {
-        this.props.books.off(null, null , this);
+    componentWillUnmount: function() {
         this.props.notebooks.off(null, null , this);
     },
     getInitialState: function() {
         return {showing: 'list', query_books: [], menus: []};
-    },
-    searchHandler: function(search) {
-        var params = {
-            q: search
-        };
-        $.ajax({
-            dataType: 'jsonp',
-            url: 'https://api.douban.com/v2/book/search',
-            data: params
-        }).then(function(data){
-            this.setState({query_books: data});
-        }.bind(this));
     },
     render: function() {
         return (
@@ -202,7 +162,6 @@ var Home = React.createClass({
             <Header notebooks={this.props.notebooks} />
             <div className="container">
             <div className="row">
-                <SearchForm searchHandler={this.searchHandler} />
                 <ShowBooks data={this.state.query_books} />
             </div>
             </div>
@@ -211,17 +170,17 @@ var Home = React.createClass({
     }
 });
 
-var books = new Books();
 var notebooks = new Notebooks();
 
-window.books = books;
 window.notebooks = notebooks;
 
-var App = React.render(<Home books={books} notebooks={notebooks} />, document.body);
+var App = React.render(
+    <Home
+        notebooks={notebooks} 
+    />,
+    document.body
+);
 
 export default App;
 
-books.fetch();
-notebooks.fetch().then(function(){
-    App = React.render(<Home books={books} notebooks={notebooks} />, document.body);
-});
+notebooks.fetch(); //.then(function(){ App.forceUpdate(); });
