@@ -8,7 +8,7 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 // app.use('/assets', express.static(__dirname + '/bower_components'));
 
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 var hbs = require('express4-handlebars');
-var views = path.join(__dirname, 'app', 'views')
+var views = path.join(__dirname, 'app', 'views');
 app.set('views', views);
 app.engine('hbs', hbs.__express);
 app.set('view engine', 'hbs');

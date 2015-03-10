@@ -1,7 +1,7 @@
 import dom from 'domReady';
 
 import Backbone from 'backbone';
-import React from 'react-with-addons';
+import React from 'react';
 
 var NoteModel = Backbone.Model.extend({
     idAttribute: 'guid'
@@ -47,8 +47,12 @@ var Header = React.createClass({
             notebook = notebook.toJSON();
             return (
                 <li key={notebook.guid}>
-                <a href={'#/notebooks/'+notebook.name}>{notebook.name}<span className="sr-only">(current)</span></a>
-                </li>)
+                <a href={'#/notebooks/'+notebook.name}>
+                    {notebook.name}
+                    <span className="sr-only">(current)</span>
+                </a>
+                </li>
+            );
         });
         return (
             <div className="navbar navbar-inverse">
@@ -135,7 +139,7 @@ window.notes = notes;
 var App = React.render(
     <Home
         notes={notes}
-        notebooks={notebooks} 
+        notebooks={notebooks}
     />,
     document.body
 );
@@ -158,4 +162,3 @@ var NotebookRoute = Backbone.Router.extend({
 new NotebookRoute();
 
 Backbone.history.start();
-
