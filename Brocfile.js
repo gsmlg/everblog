@@ -15,7 +15,7 @@ app = pickFiles(app, {
 var styles = 'app/stylesheets';
 styles = pickFiles(styles, {
   srcDir: '/',
-  destDir: 'appkit' // move under appkit namespace
+  destDir: 'app' // move under appkit namespace
 });
 
 // create tree for vendor folder (no filters needed here)
@@ -43,13 +43,13 @@ sourceTrees = sourceTrees.concat(findBowerTrees());
 var appAndDependencies = mergeTrees(sourceTrees, { overwrite: true });
 
 
-var appJs = appAndDependencies; 
+var appJs = appAndDependencies;
 // console.log(require('util').inspect(appJs, {depth: null, colors: true}));
 
 // compile less
 var appCss = compileLess(
   appAndDependencies,
-  'appkit/app.less',
+  'app/app.less',
   'assets/app.css',
   {
     sourceMap: {sourceMapFileInline: true}
@@ -61,4 +61,3 @@ var publicFiles = 'public';
 
 // merge js, css and public file trees, and export them
 module.exports = mergeTrees([appJs, appCss, publicFiles]);
-

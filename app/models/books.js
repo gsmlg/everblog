@@ -3,7 +3,7 @@ var Datastore = require('nedb');
 var _ = require('underscore');
 var Promise = require('rsvp').Promise;
 var store = new Datastore({
-  filename: path.join(__dirname, 'books.db'),
+  filename: path.join(__dirname, '../../db', 'books.db'),
   autoload: true
 });
 store.loadDatabase();
