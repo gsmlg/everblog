@@ -18,10 +18,10 @@ ns.listNotebooks().then(function(books) {
             var p4 = data.notes.map(function(note) {
                 note._id = note.guid;
                 return ns.getNote(note.guid, {
-                    withContent: true,
-                    withResourcesData: true,
-                    withResourcesRecognition: true,
-                    withResourcesAlternateData: true
+                    withContent: false,
+                    withResourcesData: false,
+                    withResourcesRecognition: false,
+                    withResourcesAlternateData: false
                 }).then(function (note) {
                     note._id = note.guid;
                     return NoteDB.upsertNote(note);
