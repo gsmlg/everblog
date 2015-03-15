@@ -1,6 +1,7 @@
 var path = require('path');
 var _ = require('underscore');
-var rsvp = require('rsvp');
+var RSVP = require('rsvp');
+var Promise = RSVP.Promise;
 var DS = require('nedb');
 var Evernote = require('evernote').Evernote;
 var TOKEN = process.env.EVERNOTE_DEV_TOKEN;
@@ -11,14 +12,84 @@ var bookStore = new DS({
 });
 bookStore.loadDatabase();
 
-var noteStoe = new DS({
+var noteStore = new DS({
   filename: path.join(__dirname, '../../db', 'note_store.db'),
   autoload: true
 });
-noteStoe.loadDatabase();
+noteStore.loadDatabase();
 
 var tagStore = new DS({
   filename: path.join(__dirname, '../../db', 'tag_store.db'),
   autoload: true
 });
 tagStore.loadDatabase();
+
+var stores = exports.stores = {
+    notebook: bookStore,
+    note: noteStore,
+    tag: tagStore
+};
+
+_.each(stores, function(store, name) {
+    name = name.substr(0, 1).toUpperCase() + name.substr(1).toLowerCase();
+
+    exports['find' + name] = function (attr) {
+        return new Promise(function(resolve, reject) {
+            store.find(attr, function(e, docs) {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    };
+
+    exports['findOne' + name] = function (attr) {
+        return new Promise(function(resolve, reject) {
+            store.findOne(attr, function(e, doc) {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(doc);
+                }
+            });
+        });
+    };
+
+    exports['insert' + name] = function (doc) {
+        return new Promise(function(resolve, reject) {
+            store.insert(doc, function(e, doc) {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(doc);
+                }
+            });
+        });
+    };
+
+    exports['update' + name] = function (doc) {
+        return new Promise(function(resolve, reject) {
+            store.update({guid: doc.guid}, doc, {multi: false, upsert: false}, function(e, n, doc) {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(doc);
+                }
+            });
+        });
+    };
+
+    exports['upsert' + name] = function (doc) {
+        return new Promise(function(resolve, reject) {
+            store.update({guid: doc.guid}, doc, {multi: false, upsert: true}, function(e, n, doc) {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(doc);
+                }
+            });
+        });
+    };
+});

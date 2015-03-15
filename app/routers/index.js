@@ -1,4 +1,3 @@
-var books = require('./books');
 var evernote = require('./evernote');
 
 module.exports = function(app) {
@@ -7,6 +6,5 @@ module.exports = function(app) {
   });
 
   app.use('/notebooks', evernote);
-  app.use('/books', books);
- 
+
 };

@@ -38,7 +38,7 @@ NoteService.prototype.listNotesByNotebook = function(guid) {
     var resultSpec = new Evernote.NoteStore_findNotesMetadata_result();
     return new Promise(function(resolve, reject){
         filter.notebookGuid = guid;
-        that.noteStore.findNotesMetadata(TOKEN, filter, 0, 10, resultSpec, function(e, data){
+        that.noteStore.findNotesMetadata(TOKEN, filter, 0, 9999, resultSpec, function(e, data){
             if (e) {
                 console.error('%s %s', e, e.stack);
                 return reject(e);
