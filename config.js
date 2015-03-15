@@ -1,7 +1,7 @@
 var broccoli = require('broccoli');
 var Watcher = require('broccoli/lib/watcher');
-var middleware = require('broccoli/lib/middleware')
-var tinylr = require('tiny-lr')
+var middleware = require('broccoli/lib/middleware');
+var tinylr = require('tiny-lr');
 var options = {
   host: 'localhost',
   port: 8080,
@@ -14,17 +14,17 @@ var Config = function Config(app) {
 
   var builder = new broccoli.Builder(tree);
 
-  var watcher = new Watcher(builder, {verbose: true})
+  var watcher = new Watcher(builder, {verbose: true});
 
   app.use(middleware(watcher));
 
   // We register these so the 'exit' handler removing temp dirs is called
   function cleanupAndExit() {
     builder.cleanup().catch(function(err) {
-      console.error('Cleanup error:')
-      console.error(err && err.stack ? err.stack : err)
+      console.error('Cleanup error:');
+      console.error(err && err.stack ? err.stack : err);
     }).finally(function() {
-      process.exit(1)
+      process.exit(1);
     });
   }
 

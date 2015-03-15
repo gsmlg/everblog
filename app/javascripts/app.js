@@ -155,19 +155,20 @@ var App = React.render(
 
 export default App;
 
-notebooks.fetch();
-notes.fetch();
+notebooks.fetch({reset: true}).then(function(){
+    var NotebookRoute = Backbone.Router.extend({
+        routes: {
+            '': 'showNotebook',
+            'notebooks/:name': 'showNotebook'
+        },
+        showNotebook: function(name) {
+            App.setNotes(name);
+        }
+    });
 
-var NotebookRoute = Backbone.Router.extend({
-    routes: {
-        '/': 'showNotebook',
-        'notebooks/:guid': 'showNotebook'
-    },
-    showNotebook: function(guid) {
-        App.setNotes(guid);
-    }
+    new NotebookRoute();
+
+    Backbone.history.start();
 });
 
-new NotebookRoute();
 
-Backbone.history.start();
