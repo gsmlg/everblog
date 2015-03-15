@@ -9,6 +9,7 @@ var options = {
 };
 
 var Config = function Config(app) {
+if (process.env.ENVIRONMENT !== 'production') {
 
   var tree = broccoli.loadBrocfile();
 
@@ -60,9 +61,10 @@ var Config = function Config(app) {
     console.log('');
     liveReload();
   });
-
+}
 };
 
 Config.PORT = options.port;
+Config.HOST = '127.0.0.1';
 
 module.exports = Config;
