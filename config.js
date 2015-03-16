@@ -9,7 +9,7 @@ var options = {
 };
 
 var Config = function Config(app) {
-if (process.env.ENVIRONMENT !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
 
   var tree = broccoli.loadBrocfile();
 
