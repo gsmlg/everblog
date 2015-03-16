@@ -20,6 +20,7 @@
 {"guid":"39880339-f642-4548-821b-effe45af88e0","name":"Ruby","parentGuid":null,"updateSequenceNum":1332,"_id":"39880339-f642-4548-821b-effe45af88e0"}
 {"guid":"3cd46aa1-a5f0-4db5-9ba9-843ea8f87062","name":"emacs","parentGuid":null,"updateSequenceNum":376,"_id":"3cd46aa1-a5f0-4db5-9ba9-843ea8f87062"}
 {"guid":"3e1bccc7-956c-4fc0-8072-2fc7e77b4591","name":"IE","parentGuid":null,"updateSequenceNum":1207,"_id":"3e1bccc7-956c-4fc0-8072-2fc7e77b4591"}
+{"guid":"3e81b51c-992a-42ec-8b6c-131d4845b9f1","name":"make","parentGuid":null,"updateSequenceNum":3955,"_id":"3e81b51c-992a-42ec-8b6c-131d4845b9f1"}
 {"guid":"3fb6e0bf-df43-4562-839f-d959589257c3","name":"路由","parentGuid":null,"updateSequenceNum":1493,"_id":"3fb6e0bf-df43-4562-839f-d959589257c3"}
 {"guid":"4304e3a3-0986-41bb-bced-fabe4231cbe4","name":"android","parentGuid":null,"updateSequenceNum":1462,"_id":"4304e3a3-0986-41bb-bced-fabe4231cbe4"}
 {"guid":"45293715-0d3b-425f-ae07-faf43af429e4","name":"Couchdb","parentGuid":null,"updateSequenceNum":2186,"_id":"45293715-0d3b-425f-ae07-faf43af429e4"}

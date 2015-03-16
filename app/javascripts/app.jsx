@@ -4,6 +4,7 @@ import ripple from 'ripples';
 import Backbone from 'backbone';
 import React from 'react';
 
+
 var NoteModel = Backbone.Model.extend({
     idAttribute: 'guid'
 });
@@ -85,8 +86,10 @@ var Note = React.createClass({
     render: function() {
         var note = this.props.note.toJSON();
         return (
-            <section className="col-md-4">
-                <h4 data-guid={note.guid} >{note.title}</h4>
+            <section className="node-item">
+            <a className="btn btn-raised btn-default" href={"/#node/"+note.guid}>
+            {note.title}
+            </a>
             </section>
         );
     }
@@ -156,7 +159,9 @@ var App = React.render(
 
 export default App;
 
-var defer = notebooks.fetch({reset: true});
+var defer = notebooks.fetch({reset: true}).then(function(){
+    jQuery.material.init();
+});
 
 var NotebookRoute = Backbone.Router.extend({
     routes: {
