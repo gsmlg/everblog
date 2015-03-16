@@ -54,14 +54,23 @@ if (isProd) {
 var appJs = appAndDependencies;
 // console.log(require('util').inspect(appJs, {depth: null, colors: true}));
 
-// compile less
-var appCss = compileLess(
-  appAndDependencies,
-  'app/app.less',
-  'assets/app.css',
-  {
+var lessOpt;
+if (isProd) {
+  lessOpt = {
+    compress: true,
+    sourceMap: false
+  };
+} else {
+  lessOpt = {
     sourceMap: {sourceMapFileInline: true}
-  });
+  };
+}
+
+// compile less
+var appCss = compileLess(appAndDependencies,
+                         'app/app.less',
+                         'assets/app.css',
+                         lessOpt);
 
 // merge js, css and public file trees, and export them
 module.exports = mergeTrees([appJs, appCss]);
