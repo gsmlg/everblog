@@ -9,6 +9,7 @@ var NoteModel = Backbone.Model.extend({
 });
 
 var NotesModel = Backbone.Collection.extend({
+    guid: 'this-is-not-a-guid',
     model: NoteModel,
     setGUID: function(guid){
         if (this.guid === guid) return null;
@@ -155,20 +156,21 @@ var App = React.render(
 
 export default App;
 
-notebooks.fetch({reset: true}).then(function(){
-    var NotebookRoute = Backbone.Router.extend({
-        routes: {
-            '': 'showNotebook',
-            'notebooks/:name': 'showNotebook'
-        },
-        showNotebook: function(name) {
-            App.setNotes(name);
-        }
-    });
+var defer = notebooks.fetch({reset: true});
 
-    new NotebookRoute();
-
-    Backbone.history.start();
+var NotebookRoute = Backbone.Router.extend({
+    routes: {
+        '': 'showNotebook',
+        'notebooks/:name': 'showNotebook'
+    },
+    showNotebook: function(name) {
+        defer.then(function(){ App.setNotes(name);});
+    }
 });
+
+new NotebookRoute();
+
+Backbone.history.start();
+
 
 
