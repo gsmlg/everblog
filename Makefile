@@ -3,7 +3,7 @@ default:
 
 install:
 	npm install
-	bower install
+	bower --allow-root install
 
 build:
 	rm -rf public
