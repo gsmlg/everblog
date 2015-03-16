@@ -6,7 +6,7 @@ var mergeTrees = require('broccoli-merge-trees');
 var findBowerTrees = require('broccoli-bower');
 var uglifyJavaScript = require('broccoli-uglify-js');
 
-var isProd = requier('./environment').production;
+var isProd = require('./environment').production;
 
 // create tree for files in the app folder
 var app = 'app/javascripts';
