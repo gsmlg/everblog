@@ -1,8 +1,5 @@
-import dom from 'domReady';
-import material from 'material';
-import ripple from 'ripples';
-import Backbone from 'backbone';
-import React from 'react';
+var Backbone = require('backbone');
+var React = require('react');
 
 var NoteModel = Backbone.Model.extend({
     idAttribute: 'guid'

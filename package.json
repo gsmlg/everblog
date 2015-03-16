@@ -16,16 +16,23 @@
     "underscore": "^1.8.2"
   },
   "devDependencies": {
-    "broccoli": "^0.13.3",
-    "broccoli-babel-transpiler": "^4.0.1",
-    "broccoli-bower": "^0.2.1",
-    "broccoli-env": "0.0.1",
-    "broccoli-es6-concatenator": "^0.1.11",
-    "broccoli-less-single": "^0.1.5",
-    "broccoli-merge-trees": "^0.2.1",
-    "broccoli-static-compiler": "^0.2.1",
+    "babelify": "^5.0.4",
+    "brfs": "^1.4.0",
+    "browser-sync": "^2.2.4",
+    "browserify": "^9.0.3",
+    "debowerify": "^1.2.0",
+    "gulp": "^3.8.11",
+    "gulp-if": "^1.2.5",
+    "gulp-notify": "^2.2.0",
+    "gulp-sourcemaps": "^1.5.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
     "less": "^2.3.1",
-    "tiny-lr": "^0.1.5"
+    "tiny-lr": "^0.1.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^2.4.0"
   },
   "scripts": {
     "start": "node app.js",
