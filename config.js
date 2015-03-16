@@ -2,6 +2,7 @@ var broccoli = require('broccoli');
 var Watcher = require('broccoli/lib/watcher');
 var middleware = require('broccoli/lib/middleware');
 var tinylr = require('tiny-lr');
+var isProd = require('./environment').production;
 var options = {
   host: 'localhost',
   port: 8080,
@@ -9,7 +10,7 @@ var options = {
 };
 
 var Config = function Config(app) {
-if (process.env.NODE_ENV !== 'production') {
+if (!isProd) {
 
   var tree = broccoli.loadBrocfile();
 
