@@ -18,6 +18,7 @@ router.route('/').get(function(req, res) {
 	});
 });
 
+// deprecate
 router.route('/notes').get(function(req, res) {
     var guid = (req.params.guid || '').replace(/^\/+|\/+$/g, '');
 	conf.getAllowedBooks().then(function(ids) {
@@ -32,6 +33,11 @@ router.route('/notes').get(function(req, res) {
 router.route('/:guid/notes').get(function(req, res) {
     var guid = (req.params.guid || '').replace(/^\/+|\/+$/g, '');
 	Note.findNote({notebookGuid: guid}).then(function(data){
+		data = data.map(function(d){
+			delete d.content;
+			delete d.resources;
+			return d;
+		})
 		res.json(data);
 	}, function(e){
 		res.status(400).json(e);
