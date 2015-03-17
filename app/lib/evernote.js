@@ -65,12 +65,12 @@ NoteService.prototype.listTagsByNotebook = function(guid) {
 
 NoteService.prototype.getNote = function getNote(guid, options) {
     var that = this;
-    options = options || {
+    options = _.defaults(options, {
         withContent: false,
         withResourcesData: false,
         withResourcesRecognition: false,
         withResourcesAlternateData: false
-    };
+    });
     return new Promise(function(resolve, reject){
         that.noteStore.getNote(TOKEN, guid,
             options.withContent,

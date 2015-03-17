@@ -21,6 +21,7 @@ sync:
 	@node sync.js
 
 start:
+	@rm -f nohup.out
 	@nohup node app.js & \
 	echo $$! | tee server.pid
 
