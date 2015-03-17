@@ -1,6 +1,7 @@
 var compileES6 = require('broccoli-babel-transpiler');
-compileES6.prototype.extensions.push('jsx')
+compileES6.prototype.extensions.push('jsx');
 var compileLess = require('broccoli-less-single');
+var cleanCSS = require('broccoli-clean-css');
 var pickFiles = require('broccoli-static-compiler');
 var mergeTrees = require('broccoli-merge-trees');
 var findBowerTrees = require('broccoli-bower');
@@ -57,7 +58,6 @@ var appJs = appAndDependencies;
 var lessOpt;
 if (isProd) {
   lessOpt = {
-    compress: true,
     sourceMap: false
   };
 } else {
@@ -71,6 +71,13 @@ var appCss = compileLess(appAndDependencies,
                          'app/app.less',
                          'assets/app.css',
                          lessOpt);
+
+if (isProd) {
+    appCss = cleanCSS(appCss, {
+        advanced: true,
+        compability: 'ie8'
+    });
+}
 
 // merge js, css and public file trees, and export them
 module.exports = mergeTrees([appJs, appCss]);
