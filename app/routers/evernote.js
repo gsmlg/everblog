@@ -1,10 +1,14 @@
 var Router = require('express').Router;
+var RSVP = require('rsvp');
+var ins = require('util').inspect;
 
 var Note = require('../models/evernote');
 var conf = require('../models/config');
 
 var NoteService = require('../lib/evernote');
 var noteService = new NoteService();
+
+var isProd = require('../../environment').production;
 
 var router = new Router();
 
@@ -47,7 +51,7 @@ router.route('/:guid/notes').get(function(req, res) {
 router.route('/note/:guid').get(function(req, res) {
     var guid = (req.params.guid || '').replace(/^\/+|\/+$/g, '');
     Note.findOneNote({_id: guid}).then(function(note){
-    	if (note.content) {
+    	if (isProd && note.content) {
     		delete note.resources;
     		res.json(note);
     	} else {
@@ -63,28 +67,31 @@ router.route('/note/:guid').get(function(req, res) {
 		    	resources.forEach(function(r){
 		    		var hash = r.data.bodyHash;
 		    		var hash = toArr(hash).map(function(i){
-		    			return i.toString(16);
+		    			var num = i.toString(16);
+		    			if (num.length === 1) num = '0' + num;
+		    			return num;
 		    		}).join('');
-		    		r._id = hash;
+		    		r._id = r.guid;
 		    		r.hash = hash;
 		    	});
 		    	defer = defer.then(function(){
-		    		Note.insertResource(resources);
+		    		return Note.insertResource(resources);
 		    	});
-		    	res.json(note);
-		    	return defer;
+		    	return defer.then(function(){
+		    		res.json(note);
+		    	});
 		    }).catch(function(e){
-				res.status(400).json(e);
+				res.status(400).send(ins(e) + "\n" + e.stack);
 		    });
     	}
     }, function(e) {
-		res.status(400).json(e);
+		res.status(400).send(ins(e) + "\n" + e.stack);
     });
 });
 
 router.route('/resource/:hash').get(function(req, res) {
 	var hash = (req.params.hash || '').replace(/^\/+|\/+$/g, '');
-	Note.findOne({_id: hash}).then(function(resource){
+	Note.findOneResource({hash: hash}).then(function(resource){
 		res.type(resource.mime)
 		var data = toArr(resource.data._body);
 		res.send(new Buffer(data));
