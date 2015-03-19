@@ -8,10 +8,11 @@ var ns = new NoteService();
 var t1 = Date.now();
 ns.listNotebooks().then(function(books) {
     var p1 = books.map(function(book){
-        console.log('Book: %s', is(book));
         book._id = book.guid;
 
-        var p2 = NoteDB.upsertNotebook(book);
+        var p2 = NoteDB.upsertNotebook(book).then(function(){
+            console.log('Book: %s', book.name);
+        });
 
         var p3 = ns.listNotesByNotebook(book.guid).then(function(data) {
             var p4 = data.notes.map(function(note) {
@@ -23,6 +24,7 @@ ns.listNotebooks().then(function(books) {
                     withResourcesAlternateData: false
                 }).then(function (note) {
                     note._id = note.guid;
+                    console.log('Note: %s', note.title);
                     return NoteDB.upsertNote(note);
                 });
             });
