@@ -48,6 +48,7 @@ router.route('/note/:guid').get(function(req, res) {
     var guid = (req.params.guid || '').replace(/^\/+|\/+$/g, '');
     Note.findOneNote({_id: guid}).then(function(note){
     	if (note.content) {
+    		delete note.resources;
     		res.json(note);
     	} else {
 		    noteService.getNote(guid, {
@@ -57,6 +58,7 @@ router.route('/note/:guid').get(function(req, res) {
 		        withResourcesAlternateData: true
 		    }).then(function(note){
 		    	var defer = Note.updateNote(note);
+		    	delete note.resources;
 		    	res.json(note);
 		    	return defer;
 		    }).catch(function(e){
