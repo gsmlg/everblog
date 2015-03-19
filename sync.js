@@ -7,7 +7,6 @@ var ns = new NoteService();
 
 var t1 = Date.now();
 ns.listNotebooks().then(function(books) {
-    console.log('Books: %s', books);
     var p1 = books.map(function(book){
         console.log('Book: %s', is(book));
         book._id = book.guid;

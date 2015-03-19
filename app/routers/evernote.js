@@ -37,7 +37,7 @@ router.route('/:guid/notes').get(function(req, res) {
 			delete d.content;
 			delete d.resources;
 			return d;
-		})
+		});
 		res.json(data);
 	}, function(e){
 		res.status(400).json(e);
@@ -57,8 +57,20 @@ router.route('/note/:guid').get(function(req, res) {
 		        withResourcesRecognition: true,
 		        withResourcesAlternateData: true
 		    }).then(function(note){
+		    	var resources = note.resources;
+		    	note.resources = null;
 		    	var defer = Note.updateNote(note);
-		    	delete note.resources;
+		    	resources.forEach(function(r){
+		    		var hash = r.data.bodyHash;
+		    		var hash = toArr(hash).map(function(i){
+		    			return i.toString(16);
+		    		}).join('');
+		    		r._id = hash;
+		    		r.hash = hash;
+		    	});
+		    	defer = defer.then(function(){
+		    		Note.insertResource(resources);
+		    	});
 		    	res.json(note);
 		    	return defer;
 		    }).catch(function(e){
@@ -69,5 +81,22 @@ router.route('/note/:guid').get(function(req, res) {
 		res.status(400).json(e);
     });
 });
+
+router.route('/resource/:hash').get(function(req, res) {
+	var hash = (req.params.hash || '').replace(/^\/+|\/+$/g, '');
+	Note.findOne({_id: hash}).then(function(resource){
+		res.type(resource.mime)
+		var data = toArr(resource.data._body);
+		res.send(new Buffer(data));
+	}).catch(function(){
+		res.status(404).end();
+	});
+});
+
+function toArr(obj){
+	var arr = new Array();
+	for (var i in obj) arr.push(obj[i]);
+	return arr;
+}
 
 module.exports = router;

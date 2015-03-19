@@ -24,7 +24,14 @@ var tagStore = new DS({
 });
 tagStore.loadDatabase();
 
+var resourceStore = new DS({
+  filename: path.join(__dirname, '../../db', 'resource_store.db'),
+  autoload: true
+});
+resourceStore.loadDatabase();
+
 var stores = exports.stores = {
+    resource: resourceStore,
     notebook: bookStore,
     note: noteStore,
     tag: tagStore
