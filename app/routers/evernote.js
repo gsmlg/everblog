@@ -68,12 +68,12 @@ router.route('/note/:guid').get(function(req, res) {
 		    	resources.forEach(function(r){
 		    		var hash = r.data.bodyHash;
 		    		var hash = '';
-		    		toArr(hash).forEach(function(i){
-		    			var num = i.toString(16);
+		    		for (var i = 0; i< 16; ++i) {
+		    			var num = r.data.bodyHash[i].toString();
 		    			if (num.length === 1)
 		    				num = '0' + num;
 		    			hash += num;
-		    		});
+		    		}
 		    		r._id = r.guid;
 		    		r.hash = hash;
 		    	});

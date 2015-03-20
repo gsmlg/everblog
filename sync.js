@@ -42,7 +42,7 @@ ns.listNotebooks().then(function(books) {
                     return NoteDB.upsertNote(note);
                 });
             });
-            return RSVP.all(p4);
+            return p4;
         });
 
         var p5 = ns.listTagsByNotebook(book.guid).then(function(tags) {
