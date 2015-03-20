@@ -8,6 +8,7 @@ var conf = require('../models/config');
 
 var NoteService = require('../lib/evernote');
 var noteService = new NoteService();
+var enml = require('enml-js');
 
 var isProd = require('../../environment').production;
 
@@ -53,7 +54,6 @@ router.route('/note/:guid').get(function(req, res) {
     var guid = (req.params.guid || '').replace(/^\/+|\/+$/g, '');
     Note.findOneNote({_id: guid}).then(function(note){
     	if (isProd && note.content) {
-    		delete note.resources;
     		res.json(note);
     	} else {
 		    noteService.getNote(guid, {
@@ -62,24 +62,9 @@ router.route('/note/:guid').get(function(req, res) {
 		        withResourcesRecognition: true,
 		        withResourcesAlternateData: true
 		    }).then(function(note){
-		    	var resources = note.resources;
-		    	note.resources = null;
+		    	note.content = enml.HTMLOfENML(note.content, note.resources);
+		    	delete note.resources;
 		    	var defer = Note.updateNote(note);
-		    	resources.forEach(function(r){
-		    		var hash = r.data.bodyHash;
-		    		var hash = '';
-		    		for (var i = 0; i< 16; ++i) {
-		    			var num = r.data.bodyHash[i].toString(16);
-		    			if (num.length === 1)
-		    				num = '0' + num;
-		    			hash += num;
-		    		}
-		    		r._id = r.guid;
-		    		r.hash = hash;
-		    	});
-		    	defer = defer.then(function(){
-		    		return Note.insertResource(resources);
-		    	});
 		    	return defer.then(function(){
 		    		res.json(note);
 		    	});
