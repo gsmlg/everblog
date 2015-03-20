@@ -1,6 +1,7 @@
 var Router = require('express').Router;
 var RSVP = require('rsvp');
 var ins = require('util').inspect;
+var _ = require('underscore');
 
 var Note = require('../models/evernote');
 var conf = require('../models/config');
@@ -66,11 +67,13 @@ router.route('/note/:guid').get(function(req, res) {
 		    	var defer = Note.updateNote(note);
 		    	resources.forEach(function(r){
 		    		var hash = r.data.bodyHash;
-		    		var hash = toArr(hash).map(function(i){
+		    		var hash = '';
+		    		toArr(hash).forEach(function(i){
 		    			var num = i.toString(16);
-		    			if (num.length === 1) num = '0' + num;
-		    			return num;
-		    		}).join('');
+		    			if (num.length === 1)
+		    				num = '0' + num;
+		    			hash += num;
+		    		});
 		    		r._id = r.guid;
 		    		r.hash = hash;
 		    	});
@@ -101,8 +104,11 @@ router.route('/resource/:hash').get(function(req, res) {
 });
 
 function toArr(obj){
-	var arr = new Array();
-	for (var i in obj) arr.push(obj[i]);
+	var arr = [];
+	for (var i in obj) {
+		if (Object.hasOwnProperty(obj, i))
+			arr.push(obj[i]);
+	}
 	return arr;
 }
 

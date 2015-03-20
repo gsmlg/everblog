@@ -1,9 +1,22 @@
 var RSVP = require('rsvp');
+var Promise = RSVP.Promise;
 var NoteService = require('./app/lib/evernote');
 var NoteDB = require('./app/models/evernote');
 var is = require('util').inspect;
 
 var ns = new NoteService();
+
+var mapSeries = function (array, iterator, context) {
+    var length = array.length
+    var current = Promise.resolve()
+    var results = new Array(length)
+    for (var i = 0; i < length; ++i) {
+        current = results[i] = current.then(function(i) {
+            return iterator.call(context, array[i], i, array)
+        }.bind(undefined, i))
+    }
+    return Promise.all(results)
+};
 
 var t1 = Date.now();
 ns.listNotebooks().then(function(books) {
@@ -15,7 +28,8 @@ ns.listNotebooks().then(function(books) {
         });
 
         var p3 = ns.listNotesByNotebook(book.guid).then(function(data) {
-            var p4 = data.notes.map(function(note) {
+            var notes = data.notes;
+            var p4 = mapSeries(notes, function(note) {
                 note._id = note.guid;
                 return ns.getNote(note.guid, {
                     withContent: false,

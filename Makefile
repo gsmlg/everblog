@@ -4,6 +4,8 @@ default:
 	#     - build
 	#     - start
 	#     - stop
+	#     - clean
+	#     - sync
 
 install:
 	@npm install
