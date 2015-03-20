@@ -69,7 +69,7 @@ router.route('/note/:guid').get(function(req, res) {
 		    		var hash = r.data.bodyHash;
 		    		var hash = '';
 		    		for (var i = 0; i< 16; ++i) {
-		    			var num = r.data.bodyHash[i].toString();
+		    			var num = r.data.bodyHash[i].toString(16);
 		    			if (num.length === 1)
 		    				num = '0' + num;
 		    			hash += num;
