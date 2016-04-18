@@ -4,6 +4,7 @@
 /dist
 /tmp
 /public
+/db
 
 # dependencies
 /node_modules
